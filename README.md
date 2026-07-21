@@ -1,96 +1,133 @@
-# hacku2024_tech3
+# AI単（AItan）
+
+英単語学習と英語論文読解を支援する、Streamlitベースの学習アプリケーションです。  
+2024年度のHack U 東京電機大学で、チーム「Tech3!」として企画・開発しました。
 
 ## 概要
-- 2024年度電大ハッカソン「HackU」の、チーム「Tech3!」用レポジトリです
 
-## 環境
-- python
-- OpenAI API使用
-- Google Cloud text-to-speech API使用
+AI単は、英単語の検索・復習・可視化に加えて、英語論文PDFから学習対象となる語句を抽出し、意味や出現頻度とともに保存できるアプリケーションです。
 
-## インストール
-ライブラリをインストールします。
+単語を個別に調べるだけでなく、論文読解中に出会った専門用語を学習データへ取り込み、その後の復習につなげることを目指しました。
 
-必要となるライブラリは、`requirements.txt`に的間ています。
+## 主な機能
+
+### 単語検索
+
+英単語の意味、発音記号、例文などを取得し、学習データへ登録します。
+
+### 単語テスト
+
+登録した単語を使ったクイズを通じて、学習内容を復習します。
+
+### Voca鍋
+
+学習した単語を視覚的に表示し、学習状況を直感的に確認します。
+
+### 論文解析
+
+英語論文のPDFをアップロードし、本文から名詞・動詞・形容詞・副詞や複合語を抽出します。
+
+- PDF本文の抽出
+- spaCyによる品詞解析・レンマ化
+- 単語および複合語の抽出
+- 出現頻度の集計
+- Google翻訳またはOpenAI APIによる日本語訳
+- 分野タグの付与
+- 学習用CSVへの保存・ダウンロード
+
+### 学習データ・単語傾向
+
+登録済みの単語、学習状況、分野ごとの傾向などを確認します。
+
+## 使用技術
+
+- Python
+- Streamlit
+- pandas
+- spaCy
+- OpenAI API
+- Google Cloud Text-to-Speech API
+- deep-translator
+- unstructured
+
+## セットアップ
+
+### 1. リポジトリの取得
+
+```bash
+git clone https://github.com/ChiguChigu-Tech/AItan_tech3_ver3.git
+cd AItan_tech3_ver3
 ```
-pip3 install -r requirements.txt
+
+### 2. 依存ライブラリのインストール
+
+```bash
+pip install -r requirements.txt
 ```
 
-論文の登録を動かす場合、以下のコードでモデルのインストールが必要かもです。(ちぐちぐに聞いてみてください)
-```
+### 3. spaCy英語モデルのインストール
+
+```bash
 python -m spacy download en_core_web_sm
 ```
 
-## ファイル構造
-あんまり、コード同士が干渉しないように、作成しました。
-人のコードもあんまりいじらないように結合しました。
-各個人が実装した機能を1ファイルに、`main.py`から呼び出しをかけています。
+### 4. 認証情報の設定
 
-```txt 
-.
-├── README.md
-├── __pycache__
-├── database
-│   ├── word_db.csv
-│   ├── word_list_nltk_top100.csv
-│   └── word_list_spacy_top100.csv
-│
-├── images
-│   └── push.png
-│
-├── main.py
-│
-├── mysetting
-│   ├── myprofile.py
-│   └── setting.py
-│
-├── paper_analysis
-│   ├── __pycache__
-│   ├── display_paper_analysis.py
-│   └── process_papar_analysis.py
-│
-├── pb_chart
-│   ├── __pycache__
-│   ├── bubble_UI.py
-│   ├── move_bubbles.py
-│   ├── visualize_graph.py
-│   └── word_count_mean_jp.csv
-│
-├── pronunciation
-│   └── meaning_and_audio.py
-│
-├── requirements.txt
-├── utils.py
-│
-├── word_quiz
-│   ├── __pycache__
-│   ├── display_word_quiz.py
-│   └── process_word_quiz.py
-│
-└── word_search
-    ├── __pycache__
-    ├── display_word_search.py
-    └── process_word_search.py
+OpenAI APIを利用する機能では、Streamlit Secretsなどを使ってAPIキーを設定してください。
+
+```toml
+# .streamlit/secrets.toml
+[ApiKey]
+OPENAI_API_KEY = "your-api-key"
 ```
 
-## 更新時のお願い
-- `requirement.txt`の更新
-    - 必要ライブラリが増えた場合、書き加えてください。
-- `main.py`の更新
-    - 基本に呼び出して欲しいファイル名に変更がある場合は、の`st.Page(page=)`以降のパスを変更してください。
-    - その他、機能追加を行った場合、他の行に倣い、新たに`st.Page`行を追加し、`st.navigation`の引数に加えてください。
-    - ページアイコン参照
-        - カラー： https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
-        - モノクロ： https://fonts.google.com/icons?icon.size=24&icon.color=%23e8eaed
-- import時の、パスの記載方法
-    - main.pyをカレントディレクトリと見てください。
-- csvファイルについて
-    - 単語登録csvは`word_db.csv`です。
-        - カラム名は`Word`,`Meaning`,`Pronounce`,`Example Sentence`,`Translated Sentence`,`Search Count`,`Add Date`,`Category`,`Importance`,`Done`です。
-    - 論文用csvは`paper_db.csv`です。
-        - カラム名は`Word`,`Meaning`,`Appearance Frequency`,`Add Date`,`Category`,`Search Count`,`Importance`,`Done`です。
-    - 設定用csvは`setting.csv` 
-        - カラム名は`FinalLogin`,`Character`,`Goal`,`ContinueDays`,`Gender`,`Age`,`UserProfile`,`UserInterest`,`ColorPattern`です
-    - csvファイル新規作成や、読み込みは`database`ディレクトリ内にお願いします。
-- 画像ファイルの保存先
-    - 使用する画像は、`images`ディレクトリ内にお願いします。
+Google Cloud Text-to-Speech APIを利用する場合は、Google Cloudの認証情報をローカル環境に設定する必要があります。
+
+> APIキー、サービスアカウント鍵、秘密情報をGitへコミットしないでください。
+
+### 5. アプリケーションの起動
+
+```bash
+streamlit run main.py
+```
+
+## ディレクトリ構成
+
+```text
+.
+├── database/              # 単語・論文学習データ
+├── images/                # アプリ内画像
+├── my_learning/           # 学習データ表示
+├── my_setting/            # ユーザー設定
+├── paper_analysis/        # 英語論文からの語句抽出・翻訳
+├── pb_chart/              # Voca鍋・可視化
+├── pronunciation/         # 意味・発音・音声生成
+├── trend_analysis/        # 単語傾向の分析
+├── word_quiz/             # 単語テスト
+├── word_search/           # 単語検索
+├── main.py                # Streamlitエントリーポイント
+├── requirements.txt
+└── utils.py
+```
+
+## プロジェクト資料
+
+- [最終発表資料](https://drive.google.com/file/d/1MYzj8bV4TWYHQt4dyR0IWOVtqDRm5uXA/view?usp=sharing)
+- [個人の担当範囲](./MY_CONTRIBUTIONS.md)
+
+## 開発体制
+
+本プロジェクトはチーム開発です。各メンバーが機能ごとに実装を担当し、`main.py`から各ページを呼び出す構成で統合しました。
+
+このリポジトリにおける関元也の担当範囲は、[`MY_CONTRIBUTIONS.md`](./MY_CONTRIBUTIONS.md)に記載しています。
+
+## 注意事項
+
+- 本リポジトリはハッカソン期間中に開発したプロトタイプです。
+- 外部APIの仕様変更などにより、そのままでは動作しない機能がある可能性があります。
+- 自動翻訳や生成AIの出力には誤りが含まれる可能性があるため、論文の原文や信頼できる資料と照合してください。
+- アップロードする論文PDFの著作権、利用条件、機密性を確認したうえで利用してください。
+
+## Status
+
+Hack U 東京電機大学 2024で開発した成果物です。現在はポートフォリオとして公開しています。
