@@ -119,7 +119,7 @@ streamlit run main.py
 
 本プロジェクトはチーム開発です。各メンバーが機能ごとに実装を担当し、`main.py`から各ページを呼び出す構成で統合しました。
 
-このリポジトリにおける関元也の担当範囲は、[`MY_CONTRIBUTIONS.md`](./MY_CONTRIBUTIONS.md)に記載しています。
+このリポジトリにおける私の担当範囲は、[`MY_CONTRIBUTIONS.md`](./MY_CONTRIBUTIONS.md)に記載しています。
 
 ## 注意事項
 
